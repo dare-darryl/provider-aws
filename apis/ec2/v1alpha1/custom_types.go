@@ -32,3 +32,6 @@ type CustomVPCPeeringConnectionParameters struct {
 	// connection if both VPCs are in the same tenant.
 	AcceptRequest bool `json:"acceptRequest,omitempty"`
 }
+
+// CustomVPCEndpointParameters are custom parameters for VPCEndpoint
+type CustomVPCEndpointParameters struct{}

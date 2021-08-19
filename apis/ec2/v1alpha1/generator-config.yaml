@@ -49,7 +49,6 @@ ignore:
     - TransitGateway
     - VpcEndpointConnectionNotification
     - VpcEndpointServiceConfiguration
-    - VpcEndpoint
     - Vpc
     - VpcCidrBlock
     - VpnConnectionRoute

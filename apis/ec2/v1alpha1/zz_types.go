@@ -95,6 +95,8 @@ type AnalysisACLRule struct {
 	Protocol *string `json:"protocol,omitempty"`
 
 	RuleAction *string `json:"ruleAction,omitempty"`
+
+	RuleNumber *int64 `json:"ruleNumber,omitempty"`
 }
 
 type AnalysisComponent struct {
@@ -207,6 +209,10 @@ type AvailabilityZoneMessage struct {
 	Message *string `json:"message,omitempty"`
 }
 
+type AvailableCapacity struct {
+	AvailableVCPUs *int64 `json:"availableVCPUs,omitempty"`
+}
+
 type BlockDeviceMapping struct {
 	DeviceName *string `json:"deviceName,omitempty"`
 
@@ -251,6 +257,18 @@ type CIDRBlock struct {
 	CIDRBlock *string `json:"cidrBlock,omitempty"`
 }
 
+type CPUOptions struct {
+	CoreCount *int64 `json:"coreCount,omitempty"`
+
+	ThreadsPerCore *int64 `json:"threadsPerCore,omitempty"`
+}
+
+type CPUOptionsRequest struct {
+	CoreCount *int64 `json:"coreCount,omitempty"`
+
+	ThreadsPerCore *int64 `json:"threadsPerCore,omitempty"`
+}
+
 type CancelSpotFleetRequestsError struct {
 	Message *string `json:"message,omitempty"`
 }
@@ -272,6 +290,8 @@ type CapacityReservation struct {
 
 	AvailabilityZoneID *string `json:"availabilityZoneID,omitempty"`
 
+	AvailableInstanceCount *int64 `json:"availableInstanceCount,omitempty"`
+
 	CapacityReservationARN *string `json:"capacityReservationARN,omitempty"`
 
 	CapacityReservationID *string `json:"capacityReservationID,omitempty"`
@@ -288,7 +308,11 @@ type CapacityReservation struct {
 
 	OwnerID *string `json:"ownerID,omitempty"`
 
+	StartDate *metav1.Time `json:"startDate,omitempty"`
+
 	Tags []*Tag `json:"tags,omitempty"`
+
+	TotalInstanceCount *int64 `json:"totalInstanceCount,omitempty"`
 }
 
 type CapacityReservationGroup struct {
@@ -425,6 +449,8 @@ type ClientVPNEndpoint struct {
 	Tags []*Tag `json:"tags,omitempty"`
 
 	VPCID *string `json:"vpcID,omitempty"`
+
+	VPNPort *int64 `json:"vpnPort,omitempty"`
 }
 
 type ClientVPNEndpointAttributeStatus struct {
@@ -594,6 +620,16 @@ type DeregisterInstanceTagAttributeRequest struct {
 type DescribeFastSnapshotRestoreSuccessItem struct {
 	AvailabilityZone *string `json:"availabilityZone,omitempty"`
 
+	DisabledTime *metav1.Time `json:"disabledTime,omitempty"`
+
+	DisablingTime *metav1.Time `json:"disablingTime,omitempty"`
+
+	EnabledTime *metav1.Time `json:"enabledTime,omitempty"`
+
+	EnablingTime *metav1.Time `json:"enablingTime,omitempty"`
+
+	OptimizingTime *metav1.Time `json:"optimizingTime,omitempty"`
+
 	OwnerAlias *string `json:"ownerAlias,omitempty"`
 
 	OwnerID *string `json:"ownerID,omitempty"`
@@ -634,6 +670,16 @@ type DisableFastSnapshotRestoreStateErrorItem struct {
 type DisableFastSnapshotRestoreSuccessItem struct {
 	AvailabilityZone *string `json:"availabilityZone,omitempty"`
 
+	DisabledTime *metav1.Time `json:"disabledTime,omitempty"`
+
+	DisablingTime *metav1.Time `json:"disablingTime,omitempty"`
+
+	EnabledTime *metav1.Time `json:"enabledTime,omitempty"`
+
+	EnablingTime *metav1.Time `json:"enablingTime,omitempty"`
+
+	OptimizingTime *metav1.Time `json:"optimizingTime,omitempty"`
+
 	OwnerAlias *string `json:"ownerAlias,omitempty"`
 
 	OwnerID *string `json:"ownerID,omitempty"`
@@ -666,11 +712,17 @@ type EBSBlockDevice struct {
 
 	Encrypted *bool `json:"encrypted,omitempty"`
 
+	IOPS *int64 `json:"iops,omitempty"`
+
 	KMSKeyID *string `json:"kmsKeyID,omitempty"`
 
 	OutpostARN *string `json:"outpostARN,omitempty"`
 
 	SnapshotID *string `json:"snapshotID,omitempty"`
+
+	Throughput *int64 `json:"throughput,omitempty"`
+
+	VolumeSize *int64 `json:"volumeSize,omitempty"`
 }
 
 type EBSInstanceBlockDevice struct {
@@ -749,6 +801,16 @@ type EnableFastSnapshotRestoreStateErrorItem struct {
 
 type EnableFastSnapshotRestoreSuccessItem struct {
 	AvailabilityZone *string `json:"availabilityZone,omitempty"`
+
+	DisabledTime *metav1.Time `json:"disabledTime,omitempty"`
+
+	DisablingTime *metav1.Time `json:"disablingTime,omitempty"`
+
+	EnabledTime *metav1.Time `json:"enabledTime,omitempty"`
+
+	EnablingTime *metav1.Time `json:"enablingTime,omitempty"`
+
+	OptimizingTime *metav1.Time `json:"optimizingTime,omitempty"`
 
 	OwnerAlias *string `json:"ownerAlias,omitempty"`
 
@@ -929,6 +991,8 @@ type FleetLaunchTemplateOverridesRequest struct {
 	AvailabilityZone *string `json:"availabilityZone,omitempty"`
 
 	MaxPrice *string `json:"maxPrice,omitempty"`
+
+	SubnetID *string `json:"subnetID,omitempty"`
 }
 
 type FleetLaunchTemplateSpecification struct {
@@ -942,6 +1006,8 @@ type FleetLaunchTemplateSpecificationRequest struct {
 }
 
 type FlowLog struct {
+	CreationTime *metav1.Time `json:"creationTime,omitempty"`
+
 	DeliverLogsErrorMessage *string `json:"deliverLogsErrorMessage,omitempty"`
 
 	DeliverLogsPermissionARN *string `json:"deliverLogsPermissionARN,omitempty"`
@@ -957,6 +1023,8 @@ type FlowLog struct {
 	LogFormat *string `json:"logFormat,omitempty"`
 
 	LogGroupName *string `json:"logGroupName,omitempty"`
+
+	MaxAggregationInterval *int64 `json:"maxAggregationInterval,omitempty"`
 
 	ResourceID *string `json:"resourceID,omitempty"`
 
@@ -1016,6 +1084,8 @@ type HostInstance struct {
 }
 
 type HostOffering struct {
+	Duration *int64 `json:"duration,omitempty"`
+
 	HourlyPrice *string `json:"hourlyPrice,omitempty"`
 
 	InstanceFamily *string `json:"instanceFamily,omitempty"`
@@ -1026,12 +1096,22 @@ type HostOffering struct {
 }
 
 type HostProperties struct {
+	Cores *int64 `json:"cores,omitempty"`
+
 	InstanceFamily *string `json:"instanceFamily,omitempty"`
 
 	InstanceType *string `json:"instanceType,omitempty"`
+
+	Sockets *int64 `json:"sockets,omitempty"`
+
+	TotalVCPUs *int64 `json:"totalVCPUs,omitempty"`
 }
 
 type HostReservation struct {
+	Count *int64 `json:"count,omitempty"`
+
+	Duration *int64 `json:"duration,omitempty"`
+
 	End *metav1.Time `json:"end,omitempty"`
 
 	HostReservationID *string `json:"hostReservationID,omitempty"`
@@ -1069,6 +1149,12 @@ type IAMInstanceProfileSpecification struct {
 	Name *string `json:"name,omitempty"`
 }
 
+type ICMPTypeCode struct {
+	Code *int64 `json:"code,omitempty"`
+
+	Type *int64 `json:"type_,omitempty"`
+}
+
 type IDFormat struct {
 	Deadline *metav1.Time `json:"deadline,omitempty"`
 
@@ -1086,7 +1172,11 @@ type IKEVersionsRequestListValue struct {
 }
 
 type IPPermission struct {
+	FromPort *int64 `json:"fromPort,omitempty"`
+
 	IPProtocol *string `json:"ipProtocol,omitempty"`
+
+	ToPort *int64 `json:"toPort,omitempty"`
 }
 
 type IPRange struct {
@@ -1205,6 +1295,8 @@ type ImportInstanceLaunchSpecification struct {
 	Monitoring *bool `json:"monitoring,omitempty"`
 
 	PrivateIPAddress *string `json:"privateIPAddress,omitempty"`
+
+	SubnetID *string `json:"subnetID,omitempty"`
 }
 
 type ImportInstanceTaskDetails struct {
@@ -1238,6 +1330,8 @@ type ImportVolumeTaskDetails struct {
 }
 
 type Instance struct {
+	AmiLaunchIndex *int64 `json:"amiLaunchIndex,omitempty"`
+
 	CapacityReservationID *string `json:"capacityReservationID,omitempty"`
 
 	ClientToken *string `json:"clientToken,omitempty"`
@@ -1298,7 +1392,15 @@ type InstanceBlockDeviceMappingSpecification struct {
 }
 
 type InstanceCapacity struct {
+	AvailableCapacity *int64 `json:"availableCapacity,omitempty"`
+
 	InstanceType *string `json:"instanceType,omitempty"`
+
+	TotalCapacity *int64 `json:"totalCapacity,omitempty"`
+}
+
+type InstanceCount struct {
+	InstanceCount *int64 `json:"instanceCount,omitempty"`
 }
 
 type InstanceCreditSpecification struct {
@@ -1325,6 +1427,14 @@ type InstanceIPv6Address struct {
 
 type InstanceIPv6AddressRequest struct {
 	IPv6Address *string `json:"ipv6Address,omitempty"`
+}
+
+type InstanceMetadataOptionsRequest struct {
+	HTTPPutResponseHopLimit *int64 `json:"httpPutResponseHopLimit,omitempty"`
+}
+
+type InstanceMetadataOptionsResponse struct {
+	HTTPPutResponseHopLimit *int64 `json:"httpPutResponseHopLimit,omitempty"`
 }
 
 type InstanceMonitoring struct {
@@ -1369,6 +1479,10 @@ type InstanceNetworkInterfaceAttachment struct {
 	AttachmentID *string `json:"attachmentID,omitempty"`
 
 	DeleteOnTermination *bool `json:"deleteOnTermination,omitempty"`
+
+	DeviceIndex *int64 `json:"deviceIndex,omitempty"`
+
+	NetworkCardIndex *int64 `json:"networkCardIndex,omitempty"`
 }
 
 type InstanceNetworkInterfaceSpecification struct {
@@ -1380,11 +1494,19 @@ type InstanceNetworkInterfaceSpecification struct {
 
 	Description *string `json:"description,omitempty"`
 
+	DeviceIndex *int64 `json:"deviceIndex,omitempty"`
+
 	InterfaceType *string `json:"interfaceType,omitempty"`
+
+	IPv6AddressCount *int64 `json:"ipv6AddressCount,omitempty"`
+
+	NetworkCardIndex *int64 `json:"networkCardIndex,omitempty"`
 
 	NetworkInterfaceID *string `json:"networkInterfaceID,omitempty"`
 
 	PrivateIPAddress *string `json:"privateIPAddress,omitempty"`
+
+	SecondaryPrivateIPAddressCount *int64 `json:"secondaryPrivateIPAddressCount,omitempty"`
 
 	SubnetID *string `json:"subnetID,omitempty"`
 }
@@ -1399,6 +1521,10 @@ type InstancePrivateIPAddress struct {
 
 type InstanceSpecification struct {
 	ExcludeBootVolume *bool `json:"excludeBootVolume,omitempty"`
+}
+
+type InstanceState struct {
+	Code *int64 `json:"code,omitempty"`
 }
 
 type InstanceStateChange struct {
@@ -1433,6 +1559,8 @@ type InstanceTagNotificationAttribute struct {
 
 type InstanceUsage struct {
 	AccountID *string `json:"accountID,omitempty"`
+
+	UsedInstanceCount *int64 `json:"usedInstanceCount,omitempty"`
 }
 
 type InternetGateway struct {
@@ -1511,16 +1639,40 @@ type LaunchTemplateBlockDeviceMappingRequest struct {
 	VirtualName *string `json:"virtualName,omitempty"`
 }
 
+type LaunchTemplateCPUOptions struct {
+	CoreCount *int64 `json:"coreCount,omitempty"`
+
+	ThreadsPerCore *int64 `json:"threadsPerCore,omitempty"`
+}
+
+type LaunchTemplateCPUOptionsRequest struct {
+	CoreCount *int64 `json:"coreCount,omitempty"`
+
+	ThreadsPerCore *int64 `json:"threadsPerCore,omitempty"`
+}
+
 type LaunchTemplateEBSBlockDevice struct {
 	DeleteOnTermination *bool `json:"deleteOnTermination,omitempty"`
 
 	Encrypted *bool `json:"encrypted,omitempty"`
+
+	IOPS *int64 `json:"iops,omitempty"`
+
+	Throughput *int64 `json:"throughput,omitempty"`
+
+	VolumeSize *int64 `json:"volumeSize,omitempty"`
 }
 
 type LaunchTemplateEBSBlockDeviceRequest struct {
 	DeleteOnTermination *bool `json:"deleteOnTermination,omitempty"`
 
 	Encrypted *bool `json:"encrypted,omitempty"`
+
+	IOPS *int64 `json:"iops,omitempty"`
+
+	Throughput *int64 `json:"throughput,omitempty"`
+
+	VolumeSize *int64 `json:"volumeSize,omitempty"`
 }
 
 type LaunchTemplateElasticInferenceAccelerator struct {
@@ -1528,6 +1680,8 @@ type LaunchTemplateElasticInferenceAccelerator struct {
 }
 
 type LaunchTemplateElasticInferenceAcceleratorResponse struct {
+	Count *int64 `json:"count,omitempty"`
+
 	Type *string `json:"type_,omitempty"`
 }
 
@@ -1559,6 +1713,14 @@ type LaunchTemplateIAMInstanceProfileSpecificationRequest struct {
 	Name *string `json:"name,omitempty"`
 }
 
+type LaunchTemplateInstanceMetadataOptions struct {
+	HTTPPutResponseHopLimit *int64 `json:"httpPutResponseHopLimit,omitempty"`
+}
+
+type LaunchTemplateInstanceMetadataOptionsRequest struct {
+	HTTPPutResponseHopLimit *int64 `json:"httpPutResponseHopLimit,omitempty"`
+}
+
 type LaunchTemplateInstanceNetworkInterfaceSpecification struct {
 	AssociateCarrierIPAddress *bool `json:"associateCarrierIPAddress,omitempty"`
 
@@ -1568,9 +1730,19 @@ type LaunchTemplateInstanceNetworkInterfaceSpecification struct {
 
 	Description *string `json:"description,omitempty"`
 
+	DeviceIndex *int64 `json:"deviceIndex,omitempty"`
+
 	InterfaceType *string `json:"interfaceType,omitempty"`
 
+	IPv6AddressCount *int64 `json:"ipv6AddressCount,omitempty"`
+
+	NetworkCardIndex *int64 `json:"networkCardIndex,omitempty"`
+
 	PrivateIPAddress *string `json:"privateIPAddress,omitempty"`
+
+	SecondaryPrivateIPAddressCount *int64 `json:"secondaryPrivateIPAddressCount,omitempty"`
+
+	SubnetID *string `json:"subnetID,omitempty"`
 }
 
 type LaunchTemplateInstanceNetworkInterfaceSpecificationRequest struct {
@@ -1582,9 +1754,19 @@ type LaunchTemplateInstanceNetworkInterfaceSpecificationRequest struct {
 
 	Description *string `json:"description,omitempty"`
 
+	DeviceIndex *int64 `json:"deviceIndex,omitempty"`
+
 	InterfaceType *string `json:"interfaceType,omitempty"`
 
+	IPv6AddressCount *int64 `json:"ipv6AddressCount,omitempty"`
+
+	NetworkCardIndex *int64 `json:"networkCardIndex,omitempty"`
+
 	PrivateIPAddress *string `json:"privateIPAddress,omitempty"`
+
+	SecondaryPrivateIPAddressCount *int64 `json:"secondaryPrivateIPAddressCount,omitempty"`
+
+	SubnetID *string `json:"subnetID,omitempty"`
 }
 
 type LaunchTemplateLicenseConfiguration struct {
@@ -1614,6 +1796,8 @@ type LaunchTemplatePlacement struct {
 
 	HostResourceGroupARN *string `json:"hostResourceGroupARN,omitempty"`
 
+	PartitionNumber *int64 `json:"partitionNumber,omitempty"`
+
 	SpreadDomain *string `json:"spreadDomain,omitempty"`
 }
 
@@ -1623,6 +1807,8 @@ type LaunchTemplatePlacementRequest struct {
 	AvailabilityZone *string `json:"availabilityZone,omitempty"`
 
 	HostResourceGroupARN *string `json:"hostResourceGroupARN,omitempty"`
+
+	PartitionNumber *int64 `json:"partitionNumber,omitempty"`
 
 	SpreadDomain *string `json:"spreadDomain,omitempty"`
 }
@@ -1634,12 +1820,16 @@ type LaunchTemplateSpecification struct {
 }
 
 type LaunchTemplateSpotMarketOptions struct {
+	BlockDurationMinutes *int64 `json:"blockDurationMinutes,omitempty"`
+
 	MaxPrice *string `json:"maxPrice,omitempty"`
 
 	ValidUntil *metav1.Time `json:"validUntil,omitempty"`
 }
 
 type LaunchTemplateSpotMarketOptionsRequest struct {
+	BlockDurationMinutes *int64 `json:"blockDurationMinutes,omitempty"`
+
 	MaxPrice *string `json:"maxPrice,omitempty"`
 
 	ValidUntil *metav1.Time `json:"validUntil,omitempty"`
@@ -1746,13 +1936,19 @@ type LocalGatewayRouteTableVirtualInterfaceGroupAssociation struct {
 type LocalGatewayVirtualInterface struct {
 	LocalAddress *string `json:"localAddress,omitempty"`
 
+	LocalBGPASN *int64 `json:"localBGPASN,omitempty"`
+
 	LocalGatewayID *string `json:"localGatewayID,omitempty"`
 
 	OwnerID *string `json:"ownerID,omitempty"`
 
 	PeerAddress *string `json:"peerAddress,omitempty"`
 
+	PeerBGPASN *int64 `json:"peerBGPASN,omitempty"`
+
 	Tags []*Tag `json:"tags,omitempty"`
+
+	Vlan *int64 `json:"vlan,omitempty"`
 }
 
 type LocalGatewayVirtualInterfaceGroup struct {
@@ -1766,6 +1962,8 @@ type LocalGatewayVirtualInterfaceGroup struct {
 type ManagedPrefixList struct {
 	AddressFamily *string `json:"addressFamily,omitempty"`
 
+	MaxEntries *int64 `json:"maxEntries,omitempty"`
+
 	OwnerID *string `json:"ownerID,omitempty"`
 
 	PrefixListName *string `json:"prefixListName,omitempty"`
@@ -1778,7 +1976,19 @@ type ManagedPrefixList struct {
 type ModifyVPNTunnelOptionsSpecification struct {
 	DPDTimeoutAction *string `json:"dPDTimeoutAction,omitempty"`
 
+	DPDTimeoutSeconds *int64 `json:"dPDTimeoutSeconds,omitempty"`
+
+	Phase1LifetimeSeconds *int64 `json:"phase1LifetimeSeconds,omitempty"`
+
+	Phase2LifetimeSeconds *int64 `json:"phase2LifetimeSeconds,omitempty"`
+
 	PreSharedKey *string `json:"preSharedKey,omitempty"`
+
+	RekeyFuzzPercentage *int64 `json:"rekeyFuzzPercentage,omitempty"`
+
+	RekeyMarginTimeSeconds *int64 `json:"rekeyMarginTimeSeconds,omitempty"`
+
+	ReplayWindowSize *int64 `json:"replayWindowSize,omitempty"`
 
 	StartupAction *string `json:"startupAction,omitempty"`
 
@@ -1847,10 +2057,14 @@ type NetworkACLEntry struct {
 	IPv6CIDRBlock *string `json:"ipv6CIDRBlock,omitempty"`
 
 	Protocol *string `json:"protocol,omitempty"`
+
+	RuleNumber *int64 `json:"ruleNumber,omitempty"`
 }
 
 type NetworkInsightsAnalysis struct {
 	NetworkPathFound *bool `json:"networkPathFound,omitempty"`
+
+	StartDate *metav1.Time `json:"startDate,omitempty"`
 
 	StatusMessage *string `json:"statusMessage,omitempty"`
 
@@ -1858,7 +2072,11 @@ type NetworkInsightsAnalysis struct {
 }
 
 type NetworkInsightsPath struct {
+	CreatedDate *metav1.Time `json:"createdDate,omitempty"`
+
 	Destination *string `json:"destination,omitempty"`
+
+	DestinationPort *int64 `json:"destinationPort,omitempty"`
 
 	Source *string `json:"source,omitempty"`
 
@@ -1918,9 +2136,13 @@ type NetworkInterfaceAttachment struct {
 
 	DeleteOnTermination *bool `json:"deleteOnTermination,omitempty"`
 
+	DeviceIndex *int64 `json:"deviceIndex,omitempty"`
+
 	InstanceID *string `json:"instanceID,omitempty"`
 
 	InstanceOwnerID *string `json:"instanceOwnerID,omitempty"`
+
+	NetworkCardIndex *int64 `json:"networkCardIndex,omitempty"`
 }
 
 type NetworkInterfaceAttachmentChanges struct {
@@ -1962,6 +2184,8 @@ type NewDHCPConfiguration struct {
 type OnDemandOptions struct {
 	MaxTotalPrice *string `json:"maxTotalPrice,omitempty"`
 
+	MinTargetCapacity *int64 `json:"minTargetCapacity,omitempty"`
+
 	SingleAvailabilityZone *bool `json:"singleAvailabilityZone,omitempty"`
 
 	SingleInstanceType *bool `json:"singleInstanceType,omitempty"`
@@ -1970,9 +2194,15 @@ type OnDemandOptions struct {
 type OnDemandOptionsRequest struct {
 	MaxTotalPrice *string `json:"maxTotalPrice,omitempty"`
 
+	MinTargetCapacity *int64 `json:"minTargetCapacity,omitempty"`
+
 	SingleAvailabilityZone *bool `json:"singleAvailabilityZone,omitempty"`
 
 	SingleInstanceType *bool `json:"singleInstanceType,omitempty"`
+}
+
+type PathComponent struct {
+	SequenceNumber *int64 `json:"sequenceNumber,omitempty"`
 }
 
 type PciID struct {
@@ -2015,6 +2245,14 @@ type PeeringTgwInfo struct {
 	TransitGatewayID *string `json:"transitGatewayID,omitempty"`
 }
 
+type Phase1DHGroupNumbersListValue struct {
+	Value *int64 `json:"value,omitempty"`
+}
+
+type Phase1DHGroupNumbersRequestListValue struct {
+	Value *int64 `json:"value,omitempty"`
+}
+
 type Phase1EncryptionAlgorithmsListValue struct {
 	Value *string `json:"value,omitempty"`
 }
@@ -2029,6 +2267,14 @@ type Phase1IntegrityAlgorithmsListValue struct {
 
 type Phase1IntegrityAlgorithmsRequestListValue struct {
 	Value *string `json:"value,omitempty"`
+}
+
+type Phase2DHGroupNumbersListValue struct {
+	Value *int64 `json:"value,omitempty"`
+}
+
+type Phase2DHGroupNumbersRequestListValue struct {
+	Value *int64 `json:"value,omitempty"`
 }
 
 type Phase2EncryptionAlgorithmsListValue struct {
@@ -2058,6 +2304,8 @@ type Placement struct {
 
 	HostResourceGroupARN *string `json:"hostResourceGroupARN,omitempty"`
 
+	PartitionNumber *int64 `json:"partitionNumber,omitempty"`
+
 	SpreadDomain *string `json:"spreadDomain,omitempty"`
 }
 
@@ -2065,6 +2313,8 @@ type PlacementGroup struct {
 	GroupID *string `json:"groupID,omitempty"`
 
 	GroupName *string `json:"groupName,omitempty"`
+
+	PartitionCount *int64 `json:"partitionCount,omitempty"`
 
 	Tags []*Tag `json:"tags,omitempty"`
 }
@@ -2075,6 +2325,12 @@ type PlacementResponse struct {
 
 type PoolCIDRBlock struct {
 	CIDR *string `json:"cidr,omitempty"`
+}
+
+type PortRange struct {
+	From *int64 `json:"from,omitempty"`
+
+	To *int64 `json:"to,omitempty"`
 }
 
 type PrefixList struct {
@@ -2105,6 +2361,10 @@ type PrefixListID struct {
 
 type PriceSchedule struct {
 	Active *bool `json:"active,omitempty"`
+}
+
+type PricingDetail struct {
+	Count *int64 `json:"count,omitempty"`
 }
 
 type PrincipalIDFormat struct {
@@ -2157,15 +2417,25 @@ type PublicIPv4Pool struct {
 	PoolID *string `json:"poolID,omitempty"`
 
 	Tags []*Tag `json:"tags,omitempty"`
+
+	TotalAddressCount *int64 `json:"totalAddressCount,omitempty"`
+
+	TotalAvailableAddressCount *int64 `json:"totalAvailableAddressCount,omitempty"`
 }
 
 type PublicIPv4PoolRange struct {
+	AddressCount *int64 `json:"addressCount,omitempty"`
+
+	AvailableAddressCount *int64 `json:"availableAddressCount,omitempty"`
+
 	FirstAddress *string `json:"firstAddress,omitempty"`
 
 	LastAddress *string `json:"lastAddress,omitempty"`
 }
 
 type Purchase struct {
+	Duration *int64 `json:"duration,omitempty"`
+
 	HostReservationID *string `json:"hostReservationID,omitempty"`
 
 	HourlyPrice *string `json:"hourlyPrice,omitempty"`
@@ -2176,6 +2446,8 @@ type Purchase struct {
 }
 
 type PurchaseRequest struct {
+	InstanceCount *int64 `json:"instanceCount,omitempty"`
+
 	PurchaseToken *string `json:"purchaseToken,omitempty"`
 }
 
@@ -2208,6 +2480,8 @@ type RequestSpotLaunchSpecification struct {
 
 	EBSOptimized *bool `json:"ebsOptimized,omitempty"`
 
+	SubnetID *string `json:"subnetID,omitempty"`
+
 	UserData *string `json:"userData,omitempty"`
 }
 
@@ -2228,6 +2502,8 @@ type ReservedInstances struct {
 
 	End *metav1.Time `json:"end,omitempty"`
 
+	InstanceCount *int64 `json:"instanceCount,omitempty"`
+
 	ReservedInstancesID *string `json:"reservedInstancesID,omitempty"`
 
 	Start *metav1.Time `json:"start,omitempty"`
@@ -2237,6 +2513,8 @@ type ReservedInstances struct {
 
 type ReservedInstancesConfiguration struct {
 	AvailabilityZone *string `json:"availabilityZone,omitempty"`
+
+	InstanceCount *int64 `json:"instanceCount,omitempty"`
 
 	Platform *string `json:"platform,omitempty"`
 }
@@ -2386,6 +2664,8 @@ type ScheduledInstance struct {
 
 	HourlyPrice *string `json:"hourlyPrice,omitempty"`
 
+	InstanceCount *int64 `json:"instanceCount,omitempty"`
+
 	InstanceType *string `json:"instanceType,omitempty"`
 
 	NetworkPlatform *string `json:"networkPlatform,omitempty"`
@@ -2398,13 +2678,19 @@ type ScheduledInstance struct {
 
 	ScheduledInstanceID *string `json:"scheduledInstanceID,omitempty"`
 
+	SlotDurationInHours *int64 `json:"slotDurationInHours,omitempty"`
+
 	TermEndDate *metav1.Time `json:"termEndDate,omitempty"`
 
 	TermStartDate *metav1.Time `json:"termStartDate,omitempty"`
+
+	TotalScheduledInstanceHours *int64 `json:"totalScheduledInstanceHours,omitempty"`
 }
 
 type ScheduledInstanceAvailability struct {
 	AvailabilityZone *string `json:"availabilityZone,omitempty"`
+
+	AvailableInstanceCount *int64 `json:"availableInstanceCount,omitempty"`
 
 	FirstSlotStartTime *metav1.Time `json:"firstSlotStartTime,omitempty"`
 
@@ -2412,15 +2698,25 @@ type ScheduledInstanceAvailability struct {
 
 	InstanceType *string `json:"instanceType,omitempty"`
 
+	MaxTermDurationInDays *int64 `json:"maxTermDurationInDays,omitempty"`
+
+	MinTermDurationInDays *int64 `json:"minTermDurationInDays,omitempty"`
+
 	NetworkPlatform *string `json:"networkPlatform,omitempty"`
 
 	Platform *string `json:"platform,omitempty"`
 
 	PurchaseToken *string `json:"purchaseToken,omitempty"`
+
+	SlotDurationInHours *int64 `json:"slotDurationInHours,omitempty"`
+
+	TotalScheduledInstanceHours *int64 `json:"totalScheduledInstanceHours,omitempty"`
 }
 
 type ScheduledInstanceRecurrence struct {
 	Frequency *string `json:"frequency,omitempty"`
+
+	Interval *int64 `json:"interval,omitempty"`
 
 	OccurrenceRelativeToEnd *bool `json:"occurrenceRelativeToEnd,omitempty"`
 
@@ -2429,6 +2725,8 @@ type ScheduledInstanceRecurrence struct {
 
 type ScheduledInstanceRecurrenceRequest struct {
 	Frequency *string `json:"frequency,omitempty"`
+
+	Interval *int64 `json:"interval,omitempty"`
 
 	OccurrenceRelativeToEnd *bool `json:"occurrenceRelativeToEnd,omitempty"`
 
@@ -2448,6 +2746,10 @@ type ScheduledInstancesEBS struct {
 
 	Encrypted *bool `json:"encrypted,omitempty"`
 
+	IOPS *int64 `json:"iops,omitempty"`
+
+	VolumeSize *int64 `json:"volumeSize,omitempty"`
+
 	VolumeType *string `json:"volumeType,omitempty"`
 }
 
@@ -2461,6 +2763,8 @@ type ScheduledInstancesLaunchSpecification struct {
 	EBSOptimized *bool `json:"ebsOptimized,omitempty"`
 
 	InstanceType *string `json:"instanceType,omitempty"`
+
+	SubnetID *string `json:"subnetID,omitempty"`
 
 	UserData *string `json:"userData,omitempty"`
 }
@@ -2476,7 +2780,15 @@ type ScheduledInstancesNetworkInterface struct {
 
 	Description *string `json:"description,omitempty"`
 
+	DeviceIndex *int64 `json:"deviceIndex,omitempty"`
+
+	IPv6AddressCount *int64 `json:"ipv6AddressCount,omitempty"`
+
 	PrivateIPAddress *string `json:"privateIPAddress,omitempty"`
+
+	SecondaryPrivateIPAddressCount *int64 `json:"secondaryPrivateIPAddressCount,omitempty"`
+
+	SubnetID *string `json:"subnetID,omitempty"`
 }
 
 type ScheduledInstancesPlacement struct {
@@ -2612,9 +2924,13 @@ type SnapshotInfo struct {
 
 	SnapshotID *string `json:"snapshotID,omitempty"`
 
+	StartTime *metav1.Time `json:"startTime,omitempty"`
+
 	Tags []*Tag `json:"tags,omitempty"`
 
 	VolumeID *string `json:"volumeID,omitempty"`
+
+	VolumeSize *int64 `json:"volumeSize,omitempty"`
 }
 
 type SnapshotTaskDetail struct {
@@ -2670,6 +2986,8 @@ type SpotFleetMonitoring struct {
 }
 
 type SpotFleetRequestConfig struct {
+	CreateTime *metav1.Time `json:"createTime,omitempty"`
+
 	SpotFleetRequestID *string `json:"spotFleetRequestID,omitempty"`
 
 	Tags []*Tag `json:"tags,omitempty"`
@@ -2680,7 +2998,11 @@ type SpotFleetRequestConfigData struct {
 
 	IAMFleetRole *string `json:"iamFleetRole,omitempty"`
 
+	InstancePoolsToUseCount *int64 `json:"instancePoolsToUseCount,omitempty"`
+
 	OnDemandMaxTotalPrice *string `json:"onDemandMaxTotalPrice,omitempty"`
+
+	OnDemandTargetCapacity *int64 `json:"onDemandTargetCapacity,omitempty"`
 
 	ReplaceUnhealthyInstances *bool `json:"replaceUnhealthyInstances,omitempty"`
 
@@ -2689,6 +3011,8 @@ type SpotFleetRequestConfigData struct {
 	SpotPrice *string `json:"spotPrice,omitempty"`
 
 	TagSpecifications []*TagSpecification `json:"tagSpecifications,omitempty"`
+
+	TargetCapacity *int64 `json:"targetCapacity,omitempty"`
 
 	TerminateInstancesWithExpiration *bool `json:"terminateInstancesWithExpiration,omitempty"`
 
@@ -2707,6 +3031,8 @@ type SpotInstanceRequest struct {
 	ActualBlockHourlyPrice *string `json:"actualBlockHourlyPrice,omitempty"`
 
 	AvailabilityZoneGroup *string `json:"availabilityZoneGroup,omitempty"`
+
+	BlockDurationMinutes *int64 `json:"blockDurationMinutes,omitempty"`
 
 	CreateTime *metav1.Time `json:"createTime,omitempty"`
 
@@ -2740,13 +3066,19 @@ type SpotInstanceStatus struct {
 }
 
 type SpotMarketOptions struct {
+	BlockDurationMinutes *int64 `json:"blockDurationMinutes,omitempty"`
+
 	MaxPrice *string `json:"maxPrice,omitempty"`
 
 	ValidUntil *metav1.Time `json:"validUntil,omitempty"`
 }
 
 type SpotOptions struct {
+	InstancePoolsToUseCount *int64 `json:"instancePoolsToUseCount,omitempty"`
+
 	MaxTotalPrice *string `json:"maxTotalPrice,omitempty"`
+
+	MinTargetCapacity *int64 `json:"minTargetCapacity,omitempty"`
 
 	SingleAvailabilityZone *bool `json:"singleAvailabilityZone,omitempty"`
 
@@ -2754,7 +3086,11 @@ type SpotOptions struct {
 }
 
 type SpotOptionsRequest struct {
+	InstancePoolsToUseCount *int64 `json:"instancePoolsToUseCount,omitempty"`
+
 	MaxTotalPrice *string `json:"maxTotalPrice,omitempty"`
+
+	MinTargetCapacity *int64 `json:"minTargetCapacity,omitempty"`
 
 	SingleAvailabilityZone *bool `json:"singleAvailabilityZone,omitempty"`
 
@@ -2776,7 +3112,11 @@ type SpotPrice struct {
 }
 
 type StaleIPPermission struct {
+	FromPort *int64 `json:"fromPort,omitempty"`
+
 	IPProtocol *string `json:"ipProtocol,omitempty"`
+
+	ToPort *int64 `json:"toPort,omitempty"`
 }
 
 type StaleSecurityGroup struct {
@@ -2807,6 +3147,8 @@ type Subnet struct {
 	AvailabilityZone *string `json:"availabilityZone,omitempty"`
 
 	AvailabilityZoneID *string `json:"availabilityZoneID,omitempty"`
+
+	AvailableIPAddressCount *int64 `json:"availableIPAddressCount,omitempty"`
 
 	CIDRBlock *string `json:"cidrBlock,omitempty"`
 
@@ -2873,8 +3215,30 @@ type TagSpecification struct {
 	Tags []*Tag `json:"tags,omitempty"`
 }
 
+type TargetCapacitySpecification struct {
+	OnDemandTargetCapacity *int64 `json:"onDemandTargetCapacity,omitempty"`
+
+	SpotTargetCapacity *int64 `json:"spotTargetCapacity,omitempty"`
+
+	TotalTargetCapacity *int64 `json:"totalTargetCapacity,omitempty"`
+}
+
+type TargetCapacitySpecificationRequest struct {
+	OnDemandTargetCapacity *int64 `json:"onDemandTargetCapacity,omitempty"`
+
+	SpotTargetCapacity *int64 `json:"spotTargetCapacity,omitempty"`
+
+	TotalTargetCapacity *int64 `json:"totalTargetCapacity,omitempty"`
+}
+
 type TargetConfiguration struct {
+	InstanceCount *int64 `json:"instanceCount,omitempty"`
+
 	OfferingID *string `json:"offeringID,omitempty"`
+}
+
+type TargetConfigurationRequest struct {
+	InstanceCount *int64 `json:"instanceCount,omitempty"`
 }
 
 type TargetGroup struct {
@@ -2910,11 +3274,27 @@ type TrafficMirrorFilterRule struct {
 
 	DestinationCIDRBlock *string `json:"destinationCIDRBlock,omitempty"`
 
+	Protocol *int64 `json:"protocol,omitempty"`
+
+	RuleNumber *int64 `json:"ruleNumber,omitempty"`
+
 	SourceCIDRBlock *string `json:"sourceCIDRBlock,omitempty"`
 
 	TrafficMirrorFilterID *string `json:"trafficMirrorFilterID,omitempty"`
 
 	TrafficMirrorFilterRuleID *string `json:"trafficMirrorFilterRuleID,omitempty"`
+}
+
+type TrafficMirrorPortRange struct {
+	FromPort *int64 `json:"fromPort,omitempty"`
+
+	ToPort *int64 `json:"toPort,omitempty"`
+}
+
+type TrafficMirrorPortRangeRequest struct {
+	FromPort *int64 `json:"fromPort,omitempty"`
+
+	ToPort *int64 `json:"toPort,omitempty"`
 }
 
 type TrafficMirrorSession struct {
@@ -2924,6 +3304,10 @@ type TrafficMirrorSession struct {
 
 	OwnerID *string `json:"ownerID,omitempty"`
 
+	PacketLength *int64 `json:"packetLength,omitempty"`
+
+	SessionNumber *int64 `json:"sessionNumber,omitempty"`
+
 	Tags []*Tag `json:"tags,omitempty"`
 
 	TrafficMirrorFilterID *string `json:"trafficMirrorFilterID,omitempty"`
@@ -2931,6 +3315,8 @@ type TrafficMirrorSession struct {
 	TrafficMirrorSessionID *string `json:"trafficMirrorSessionID,omitempty"`
 
 	TrafficMirrorTargetID *string `json:"trafficMirrorTargetID,omitempty"`
+
+	VirtualNetworkID *int64 `json:"virtualNetworkID,omitempty"`
 }
 
 type TrafficMirrorTarget struct {
@@ -3182,9 +3568,21 @@ type TransitGatewayVPCAttachment struct {
 type TunnelOption struct {
 	DpdTimeoutAction *string `json:"dpdTimeoutAction,omitempty"`
 
+	DpdTimeoutSeconds *int64 `json:"dpdTimeoutSeconds,omitempty"`
+
 	OutsideIPAddress *string `json:"outsideIPAddress,omitempty"`
 
+	Phase1LifetimeSeconds *int64 `json:"phase1LifetimeSeconds,omitempty"`
+
+	Phase2LifetimeSeconds *int64 `json:"phase2LifetimeSeconds,omitempty"`
+
 	PreSharedKey *string `json:"preSharedKey,omitempty"`
+
+	RekeyFuzzPercentage *int64 `json:"rekeyFuzzPercentage,omitempty"`
+
+	RekeyMarginTimeSeconds *int64 `json:"rekeyMarginTimeSeconds,omitempty"`
+
+	ReplayWindowSize *int64 `json:"replayWindowSize,omitempty"`
 
 	StartupAction *string `json:"startupAction,omitempty"`
 
@@ -3244,6 +3642,8 @@ type UserIDGroupPair struct {
 }
 
 type VGWTelemetry struct {
+	AcceptedRouteCount *int64 `json:"acceptedRouteCount,omitempty"`
+
 	CertificateARN *string `json:"certificateARN,omitempty"`
 
 	LastStatusChange *metav1.Time `json:"lastStatusChange,omitempty"`
@@ -3289,7 +3689,33 @@ type VPCClassicLink struct {
 	VPCID *string `json:"vpcID,omitempty"`
 }
 
-type VPCEndpoint struct {
+type VPCEndpointConnection struct {
+	CreationTimestamp *metav1.Time `json:"creationTimestamp,omitempty"`
+
+	DNSEntries []*DNSEntry `json:"dnsEntries,omitempty"`
+
+	GatewayLoadBalancerARNs []*string `json:"gatewayLoadBalancerARNs,omitempty"`
+
+	NetworkLoadBalancerARNs []*string `json:"networkLoadBalancerARNs,omitempty"`
+
+	ServiceID *string `json:"serviceID,omitempty"`
+
+	VPCEndpointID *string `json:"vpcEndpointID,omitempty"`
+
+	VPCEndpointOwner *string `json:"vpcEndpointOwner,omitempty"`
+
+	VPCEndpointState *string `json:"vpcEndpointState,omitempty"`
+}
+
+type VPCEndpoint_SDK struct {
+	CreationTimestamp *metav1.Time `json:"creationTimestamp,omitempty"`
+
+	DNSEntries []*DNSEntry `json:"dnsEntries,omitempty"`
+
+	Groups []*SecurityGroupIdentifier `json:"groups,omitempty"`
+	// The last error that occurred for a VPC endpoint.
+	LastError *LastError `json:"lastError,omitempty"`
+
 	NetworkInterfaceIDs []*string `json:"networkInterfaceIDs,omitempty"`
 
 	OwnerID *string `json:"ownerID,omitempty"`
@@ -3304,25 +3730,17 @@ type VPCEndpoint struct {
 
 	ServiceName *string `json:"serviceName,omitempty"`
 
+	State *string `json:"state,omitempty"`
+
 	SubnetIDs []*string `json:"subnetIDs,omitempty"`
 
 	Tags []*Tag `json:"tags,omitempty"`
 
 	VPCEndpointID *string `json:"vpcEndpointID,omitempty"`
 
+	VPCEndpointType *string `json:"vpcEndpointType,omitempty"`
+
 	VPCID *string `json:"vpcID,omitempty"`
-}
-
-type VPCEndpointConnection struct {
-	GatewayLoadBalancerARNs []*string `json:"gatewayLoadBalancerARNs,omitempty"`
-
-	NetworkLoadBalancerARNs []*string `json:"networkLoadBalancerARNs,omitempty"`
-
-	ServiceID *string `json:"serviceID,omitempty"`
-
-	VPCEndpointID *string `json:"vpcEndpointID,omitempty"`
-
-	VPCEndpointOwner *string `json:"vpcEndpointOwner,omitempty"`
 }
 
 type VPCIPv6CIDRBlockAssociation struct {
@@ -3439,7 +3857,19 @@ type VPNStaticRoute struct {
 type VPNTunnelOptionsSpecification struct {
 	DPDTimeoutAction *string `json:"dPDTimeoutAction,omitempty"`
 
+	DPDTimeoutSeconds *int64 `json:"dPDTimeoutSeconds,omitempty"`
+
+	Phase1LifetimeSeconds *int64 `json:"phase1LifetimeSeconds,omitempty"`
+
+	Phase2LifetimeSeconds *int64 `json:"phase2LifetimeSeconds,omitempty"`
+
 	PreSharedKey *string `json:"preSharedKey,omitempty"`
+
+	RekeyFuzzPercentage *int64 `json:"rekeyFuzzPercentage,omitempty"`
+
+	RekeyMarginTimeSeconds *int64 `json:"rekeyMarginTimeSeconds,omitempty"`
+
+	ReplayWindowSize *int64 `json:"replayWindowSize,omitempty"`
 
 	StartupAction *string `json:"startupAction,omitempty"`
 
@@ -3457,13 +3887,25 @@ type ValidationError struct {
 type VolumeModification struct {
 	EndTime *metav1.Time `json:"endTime,omitempty"`
 
+	OriginalIOPS *int64 `json:"originalIOPS,omitempty"`
+
 	OriginalMultiAttachEnabled *bool `json:"originalMultiAttachEnabled,omitempty"`
+
+	OriginalSize *int64 `json:"originalSize,omitempty"`
+
+	OriginalThroughput *int64 `json:"originalThroughput,omitempty"`
 
 	StartTime *metav1.Time `json:"startTime,omitempty"`
 
 	StatusMessage *string `json:"statusMessage,omitempty"`
 
+	TargetIOPS *int64 `json:"targetIOPS,omitempty"`
+
 	TargetMultiAttachEnabled *bool `json:"targetMultiAttachEnabled,omitempty"`
+
+	TargetSize *int64 `json:"targetSize,omitempty"`
+
+	TargetThroughput *int64 `json:"targetThroughput,omitempty"`
 
 	VolumeID *string `json:"volumeID,omitempty"`
 }
@@ -3496,6 +3938,10 @@ type VolumeStatusEvent struct {
 	EventType *string `json:"eventType,omitempty"`
 
 	InstanceID *string `json:"instanceID,omitempty"`
+
+	NotAfter *metav1.Time `json:"notAfter,omitempty"`
+
+	NotBefore *metav1.Time `json:"notBefore,omitempty"`
 }
 
 type VolumeStatusItem struct {
