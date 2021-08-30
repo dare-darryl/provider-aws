@@ -1,0 +1,18 @@
+apiVersion: ec2.aws.crossplane.io/v1alpha1
+kind: VPCEndpoint
+metadata:
+  name: sample-vpcendpoint
+spec:
+  forProvider:
+    region: us-east-1
+    privateDNSEnabled: true
+    serviceName: com.amazonaws.us-east-1.vpce-svc-0123456789abcdef0
+    securityGroupIDs:
+    - sg-0123456789abcdef0
+    subnetIDs:
+    - subnet-0123456789abcdef0
+    - subnet-0123456789abcdef1
+    vpcEndpointType: Interface
+    vpcID: vpc-0123456789abcdef0
+  providerConfigRef:
+    name: example
