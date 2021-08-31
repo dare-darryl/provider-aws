@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/util/workqueue"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -18,10 +19,12 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/service/ec2"
 	svcsdk "github.com/aws/aws-sdk-go/service/ec2"
 	svcsdkapi "github.com/aws/aws-sdk-go/service/ec2/ec2iface"
 	xpv1 "github.com/crossplane/crossplane-runtime/apis/common/v1"
 	cpresource "github.com/crossplane/crossplane-runtime/pkg/resource"
+
 	svcapitypes "github.com/crossplane/provider-aws/apis/ec2/v1alpha1"
 	awsclients "github.com/crossplane/provider-aws/pkg/clients"
 )
@@ -107,6 +110,8 @@ func postObserve(_ context.Context, cr *svcapitypes.VPCEndpoint, resp *svcsdk.De
 		return managed.ExternalObservation{}, err
 	}
 
+	cr.Status.AtProvider.VPCEndpoint = generateVPCEndpointSDK(resp.VpcEndpoints[0])
+
 	switch awsclients.StringValue(resp.VpcEndpoints[0].State) {
 	case "available":
 		cr.SetConditions(xpv1.Available())
@@ -151,4 +156,24 @@ func filterList(cr *svcapitypes.VPCEndpoint, obj *svcsdk.DescribeVpcEndpointsOut
 		}
 	}
 	return resp
+}
+
+func generateVPCEndpointSDK(vpcEndpoint *ec2.VpcEndpoint) *svcapitypes.VPCEndpoint_SDK {
+	vpcEndpointSDK := &svcapitypes.VPCEndpoint_SDK{}
+
+	// Mapping vpcEndpoint -> vpcEndpoint_SDK
+	vpcEndpointSDK.CreationTimestamp = &v1.Time{
+		Time: *vpcEndpoint.CreationTimestamp,
+	}
+	vpcEndpointSDK.DNSEntries = []*svcapitypes.DNSEntry{}
+	for _, dnsEntry := range vpcEndpoint.DnsEntries {
+		dnsEntrySDK := svcapitypes.DNSEntry{
+			DNSName:      dnsEntry.DnsName,
+			HostedZoneID: dnsEntry.HostedZoneId,
+		}
+		vpcEndpointSDK.DNSEntries = append(vpcEndpointSDK.DNSEntries, &dnsEntrySDK)
+	}
+	vpcEndpointSDK.State = vpcEndpoint.State
+
+	return vpcEndpointSDK
 }
