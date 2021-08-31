@@ -98,6 +98,13 @@ func postObserve(_ context.Context, cr *svcapitypes.VPCEndpoint, resp *svcsdk.De
 		return managed.ExternalObservation{}, err
 	}
 
+	// Load DNS Entry as connection detail
+	if resp.VpcEndpoints[0].DnsEntries[0].DnsName != nil && awsclients.StringValue(resp.VpcEndpoints[0].DnsEntries[0].DnsName) != "" {
+		obs.ConnectionDetails = managed.ConnectionDetails{
+			xpv1.ResourceCredentialsSecretEndpointKey: []byte(awsclients.StringValue(resp.VpcEndpoints[0].DnsEntries[0].DnsName)),
+		}
+	}
+
 	cr.Status.AtProvider.VPCEndpoint = generateVPCEndpointSDK(resp.VpcEndpoints[0])
 
 	switch awsclients.StringValue(resp.VpcEndpoints[0].State) {
