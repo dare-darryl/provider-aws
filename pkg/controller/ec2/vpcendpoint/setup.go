@@ -43,6 +43,7 @@ func SetupVPCEndpoint(mgr ctrl.Manager, l logging.Logger, rl workqueue.RateLimit
 			e.postObserve = postObserve
 			e.isUpToDate = isUpToDate
 			e.preUpdate = c.preUpdate
+			e.postUpdate = postUpdate
 			e.filterList = filterList
 		},
 	}
@@ -253,6 +254,16 @@ func (e *custom) delete(_ context.Context, mg cpresource.Managed) error {
 	// Delete
 	_, err := e.client.DeleteVpcEndpoints(deleteInput)
 	return err
+}
+
+func postUpdate(_ context.Context, cr *svcapitypes.VPCEndpoint, resp *svcsdk.ModifyVpcEndpointOutput, upd managed.ExternalUpdate, err error) (managed.ExternalUpdate, error) {
+	if err != nil {
+		return managed.ExternalUpdate{}, err
+	}
+
+	// Set it as creating until observation corrects it
+	cr.SetConditions(xpv1.Creating())
+	return upd, nil
 }
 
 func filterList(cr *svcapitypes.VPCEndpoint, obj *svcsdk.DescribeVpcEndpointsOutput) *svcsdk.DescribeVpcEndpointsOutput {
