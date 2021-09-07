@@ -2,6 +2,7 @@ package vpcendpoint
 
 import (
 	"context"
+	"strings"
 	"time"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -41,6 +42,7 @@ func SetupVPCEndpoint(mgr ctrl.Manager, l logging.Logger, rl workqueue.RateLimit
 			e.postCreate = postCreate
 			e.postObserve = postObserve
 			e.isUpToDate = isUpToDate
+			e.preUpdate = c.preUpdate
 			e.filterList = filterList
 		},
 	}
@@ -193,6 +195,50 @@ sgCompare:
 	return difference == jsondiff.FullMatch, nil
 }
 
+/*
+preUpdate adds the mutable fields into the update request input
+*/
+func (e *custom) preUpdate(ctx context.Context, cr *svcapitypes.VPCEndpoint, obj *svcsdk.ModifyVpcEndpointInput) error {
+	obj.VpcEndpointId = awsclients.String(meta.GetExternalName(cr))
+
+	/*
+		Add fields to upstream AWS
+	*/
+	obj.SetAddSecurityGroupIds(cr.Spec.ForProvider.SecurityGroupIDs)
+	obj.SetAddSubnetIds(cr.Spec.ForProvider.SubnetIDs)
+	obj.SetAddRouteTableIds(cr.Spec.ForProvider.RouteTableIDs)
+	obj.SetPolicyDocument(aws.StringValue(cr.Spec.ForProvider.PolicyDocument))
+
+	/*
+		Remove fields from upstream AWS
+	*/
+	upstream, err := e.client.DescribeVpcEndpoints(&svcsdk.DescribeVpcEndpointsInput{VpcEndpointIds: []*string{obj.VpcEndpointId}})
+	if err != nil {
+		return err
+	}
+
+	removeSubnets := listSubtractFromStringPtr(upstream.VpcEndpoints[0].SubnetIds, cr.Spec.ForProvider.SubnetIDs)
+	removeRTs := listSubtractFromStringPtr(upstream.VpcEndpoints[0].RouteTableIds, cr.Spec.ForProvider.RouteTableIDs)
+
+	removeSGs := []*string{}
+sgCompare:
+	for _, upstreamSG := range upstream.VpcEndpoints[0].Groups {
+		for _, crSG := range cr.Spec.ForProvider.SecurityGroupIDs {
+			if aws.StringValue(upstreamSG.GroupId) == aws.StringValue(crSG) {
+				continue sgCompare
+			}
+		}
+		removeSGs = append(removeSGs, upstreamSG.GroupId)
+	}
+
+	obj.SetRemoveSubnetIds(removeSubnets)
+	obj.SetRemoveSecurityGroupIds(removeSGs)
+	obj.SetRemoveRouteTableIds(removeRTs)
+
+	formatModifyVpcEndpointInput(obj)
+	return nil
+}
+
 func (e *custom) delete(_ context.Context, mg cpresource.Managed) error {
 	cr, ok := mg.(*svcapitypes.VPCEndpoint)
 	if !ok {
@@ -241,7 +287,10 @@ func generateVPCEndpointSDK(vpcEndpoint *ec2.VpcEndpoint) *svcapitypes.VPCEndpoi
 	return vpcEndpointSDK
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 6e1bfde0 (Reduce cyclomatic complexity for preUpdate)
 
 /*
 formatModifyVpcEndpointInput takes in a ModifyVpcEndpointInput, and sets
@@ -298,6 +347,7 @@ compare:
 
 	return result
 }
+<<<<<<< HEAD
 
 /*
 listCompareStringPtrIsSame takes in 2 list of string pointers,
@@ -327,3 +377,5 @@ compare:
 	return true
 }
 >>>>>>> 58d44389 (Reduce cyclomatic complexity for isUpToDate)
+=======
+>>>>>>> 6e1bfde0 (Reduce cyclomatic complexity for preUpdate)
