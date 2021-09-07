@@ -16,6 +16,7 @@ import (
 	"github.com/crossplane/crossplane-runtime/pkg/ratelimiter"
 	"github.com/crossplane/crossplane-runtime/pkg/reconciler/managed"
 	"github.com/crossplane/crossplane-runtime/pkg/resource"
+	"github.com/nsf/jsondiff"
 	"github.com/pkg/errors"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -133,8 +134,63 @@ func postObserve(_ context.Context, cr *svcapitypes.VPCEndpoint, resp *svcsdk.De
 	return obs, nil
 }
 
-func isUpToDate(*svcapitypes.VPCEndpoint, *svcsdk.DescribeVpcEndpointsOutput) (bool, error) {
-	return true, nil
+/*
+isUpToDate checks for the following mutable fields for the VPCEndpoint in upstream AWS:
+1. Subnets
+2. Security Groups
+3. Route Tables
+4. Policy Document
+*/
+func isUpToDate(cr *svcapitypes.VPCEndpoint, obj *svcsdk.DescribeVpcEndpointsOutput) (bool, error) {
+	/*
+		1. Check subnets
+	*/
+	if !listCompareStringPtrIsSame(obj.VpcEndpoints[0].SubnetIds, cr.Spec.ForProvider.SubnetIDs) {
+		return false, nil
+	}
+
+	/*
+		2. Check Route Tables
+	*/
+	if !listCompareStringPtrIsSame(obj.VpcEndpoints[0].RouteTableIds, cr.Spec.ForProvider.RouteTableIDs) {
+		return false, nil
+	}
+
+	/*
+		3. Check Security Groups
+	*/
+	upstreamSGs := obj.VpcEndpoints[0].Groups
+	if len(upstreamSGs) != len(cr.Spec.ForProvider.SecurityGroupIDs) {
+		return false, nil
+	}
+
+sgCompare:
+	for _, declaredSG := range cr.Spec.ForProvider.SecurityGroupIDs {
+		for _, upstreamSG := range upstreamSGs {
+			if awsclients.StringValue(declaredSG) == awsclients.StringValue(upstreamSG.GroupId) {
+				continue sgCompare
+			}
+		}
+		// declaredSG not found in upstream AWS
+		return false, nil
+	}
+
+	/*
+		4. Check policyDocument
+	*/
+	defaultPolicy := "{\"Statement\":[{\"Action\":\"*\",\"Effect\": \"Allow\",\"Principal\":\"*\",\"Resource\":\"*\"}]}"
+	declaredPolicy := awsclients.StringValue(cr.Spec.ForProvider.PolicyDocument)
+	upstreamPolicy := awsclients.StringValue(obj.VpcEndpoints[0].PolicyDocument)
+
+	// If no declared policy, we expect the result to be equivalent to the default policy
+	if declaredPolicy == "" {
+		difference, _ := jsondiff.Compare([]byte(upstreamPolicy), []byte(defaultPolicy), &jsondiff.Options{})
+		return difference == jsondiff.FullMatch || difference == jsondiff.SupersetMatch, nil
+	}
+
+	// If there is a declared policy, we expect the upstream policy to match
+	difference, _ := jsondiff.Compare([]byte(upstreamPolicy), []byte(declaredPolicy), &jsondiff.Options{})
+	return difference == jsondiff.FullMatch, nil
 }
 
 func (e *custom) delete(_ context.Context, mg cpresource.Managed) error {
@@ -184,3 +240,90 @@ func generateVPCEndpointSDK(vpcEndpoint *ec2.VpcEndpoint) *svcapitypes.VPCEndpoi
 
 	return vpcEndpointSDK
 }
+<<<<<<< HEAD
+=======
+
+/*
+formatModifyVpcEndpointInput takes in a ModifyVpcEndpointInput, and sets
+fields containing an empty list to nil
+*/
+func formatModifyVpcEndpointInput(obj *svcsdk.ModifyVpcEndpointInput) {
+	if len(obj.AddSecurityGroupIds) == 0 {
+		obj.AddSecurityGroupIds = nil
+	}
+	if len(obj.RemoveSecurityGroupIds) == 0 {
+		obj.RemoveSecurityGroupIds = nil
+	}
+	if len(obj.AddRouteTableIds) == 0 {
+		obj.AddRouteTableIds = nil
+	}
+	if len(obj.RemoveRouteTableIds) == 0 {
+		obj.RemoveRouteTableIds = nil
+	}
+	if len(obj.AddSubnetIds) == 0 {
+		obj.AddSubnetIds = nil
+	}
+	if len(obj.RemoveSubnetIds) == 0 {
+		obj.RemoveSubnetIds = nil
+	}
+	if strings.TrimSpace(aws.StringValue(obj.PolicyDocument)) == "" {
+		obj.PolicyDocument = nil
+	}
+}
+
+/*
+listSubtractFromStringPtr takes in 2 list of string pointers
+([]*string) "base", "subtract", and returns a "result" list
+of string pointers where "result" = "base" - "subtract".
+
+Comparisons of the underlying string is done
+
+Example:
+"base": ["a", "b", "g", "x"]
+"subtract": ["b", "x", "y"]
+"result": ["a", "g"]
+*/
+func listSubtractFromStringPtr(base, subtract []*string) []*string {
+	result := []*string{}
+
+compare:
+	for _, baseElem := range base {
+		for _, subtractElem := range subtract {
+			if aws.StringValue(baseElem) == aws.StringValue(subtractElem) {
+				continue compare
+			}
+		}
+		result = append(result, baseElem)
+	}
+
+	return result
+}
+
+/*
+listCompareStringPtrIsSame takes in 2 list of string pointers,
+and returns a true on the following condition:
+1. The length of both lists are the same
+2. All values in listA can be found in listB
+
+Warning:
+This function assumes that the values in both lists are unique, that is,
+all values in listA is distinct, and all values in listB is distinct.
+*/
+func listCompareStringPtrIsSame(listA, listB []*string) bool {
+	if len(listA) != len(listB) {
+		return false
+	}
+
+compare:
+	for _, elemA := range listA {
+		for _, elemB := range listB {
+			if awsclients.StringValue(elemA) == awsclients.StringValue(elemB) {
+				continue compare
+			}
+		}
+		return false
+	}
+
+	return true
+}
+>>>>>>> 58d44389 (Reduce cyclomatic complexity for isUpToDate)

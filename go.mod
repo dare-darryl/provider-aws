@@ -31,6 +31,7 @@ require (
 	github.com/google/go-cmp v0.5.6
 	github.com/mitchellh/copystructure v1.0.0
 	github.com/onsi/gomega v1.14.0
+	github.com/nsf/jsondiff v0.0.0-20210303162244-6ea32392771e
 	github.com/pkg/errors v0.9.1
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
 	k8s.io/api v0.21.3
