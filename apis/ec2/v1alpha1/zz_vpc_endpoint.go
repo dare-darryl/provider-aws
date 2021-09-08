@@ -74,10 +74,7 @@ type VPCEndpointParameters struct {
 	// The type of endpoint.
 	//
 	// Default: Gateway
-	VPCEndpointType *string `json:"vpcEndpointType,omitempty"`
-	// The ID of the VPC in which the endpoint will be used.
-	// +kubebuilder:validation:Required
-	VPCID                       *string `json:"vpcID"`
+	VPCEndpointType             *string `json:"vpcEndpointType,omitempty"`
 	CustomVPCEndpointParameters `json:",inline"`
 }
 

@@ -19,6 +19,7 @@ package v1alpha1
 import (
 	"context"
 
+	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/crossplane/crossplane-runtime/pkg/reference"
 	"github.com/pkg/errors"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -59,4 +60,68 @@ func (mg *VPCPeeringConnection) ResolveReferences(ctx context.Context, c client.
 	mg.Spec.ForProvider.PeerVPCIDRef = rsp.ResolvedReference
 
 	return nil
+}
+
+// ResolveReferences of this VPCEndpoint
+func (mg *VPCEndpoint) ResolveReferences(ctx context.Context, c client.Reader) error {
+	r := reference.NewAPIResolver(c, mg)
+
+	// Resolve spec.forProvider.vpcID
+	rsp, err := r.Resolve(ctx, reference.ResolutionRequest{
+		CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.VPCID),
+		Reference:    mg.Spec.ForProvider.VPCIDRef,
+		Selector:     mg.Spec.ForProvider.VPCIDSelector,
+		To:           reference.To{Managed: &v1beta1.VPC{}, List: &v1beta1.VPCList{}},
+		Extract:      reference.ExternalName(),
+	})
+	if err != nil {
+		return errors.Wrap(err, "spec.forProvider.vpcID")
+	}
+	mg.Spec.ForProvider.VPCID = reference.ToPtrValue(rsp.ResolvedValue)
+	mg.Spec.ForProvider.VPCIDRef = rsp.ResolvedReference
+
+	// Resolve spec.forProvider.subnetIds
+	mrsp, err := r.ResolveMultiple(ctx, reference.MultiResolutionRequest{
+		CurrentValues: aws.StringValueSlice(mg.Spec.ForProvider.SubnetIDs),
+		References:    mg.Spec.ForProvider.SubnetIDRefs,
+		Selector:      mg.Spec.ForProvider.SubnetIDSelector,
+		To:            reference.To{Managed: &v1beta1.Subnet{}, List: &v1beta1.SubnetList{}},
+		Extract:       reference.ExternalName(),
+	})
+	if err != nil {
+		return errors.Wrap(err, "spec.forProvider.subnetIds")
+	}
+	mg.Spec.ForProvider.SubnetIDs = aws.StringSlice(mrsp.ResolvedValues)
+	mg.Spec.ForProvider.SubnetIDRefs = mrsp.ResolvedReferences
+
+	// Resolve spec.forProvider.securityGroupIds
+	mrsp, err = r.ResolveMultiple(ctx, reference.MultiResolutionRequest{
+		CurrentValues: aws.StringValueSlice(mg.Spec.ForProvider.SecurityGroupIDs),
+		References:    mg.Spec.ForProvider.SecurityGroupIDRefs,
+		Selector:      mg.Spec.ForProvider.SecurityGroupIDSelector,
+		To:            reference.To{Managed: &v1beta1.SecurityGroup{}, List: &v1beta1.SecurityGroupList{}},
+		Extract:       reference.ExternalName(),
+	})
+	if err != nil {
+		return errors.Wrap(err, "spec.forProvider.securityGroupIds")
+	}
+	mg.Spec.ForProvider.SecurityGroupIDs = aws.StringSlice(mrsp.ResolvedValues)
+	mg.Spec.ForProvider.SecurityGroupIDRefs = mrsp.ResolvedReferences
+
+	// Resolve spec.forProvider.routeTableIDs
+	mrsp, err = r.ResolveMultiple(ctx, reference.MultiResolutionRequest{
+		CurrentValues: aws.StringValueSlice(mg.Spec.ForProvider.RouteTableIDs),
+		References:    mg.Spec.ForProvider.RouteTableIDRefs,
+		Selector:      mg.Spec.ForProvider.RouteTableIDSelector,
+		To:            reference.To{Managed: &v1beta1.RouteTable{}, List: &v1beta1.RouteTableList{}},
+		Extract:       reference.ExternalName(),
+	})
+	if err != nil {
+		return errors.Wrap(err, "spec.forProvider.routeTableIDs")
+	}
+	mg.Spec.ForProvider.RouteTableIDs = aws.StringSlice(mrsp.ResolvedValues)
+	mg.Spec.ForProvider.RouteTableIDRefs = mrsp.ResolvedReferences
+
+	return nil
+
 }
