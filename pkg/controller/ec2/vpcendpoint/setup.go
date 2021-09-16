@@ -34,19 +34,8 @@ import (
 // SetupVPCEndpoint adds a controller that reconciles VPCEndpoint.
 func SetupVPCEndpoint(mgr ctrl.Manager, l logging.Logger, rl workqueue.RateLimiter, poll time.Duration) error {
 	name := managed.ControllerName(svcapitypes.VPCEndpointGroupKind)
-	opts := []option{
-		func(e *external) {
-			c := &custom{client: e.client, kube: e.kube}
-			e.delete = c.delete
-			e.preCreate = preCreate
-			e.postCreate = postCreate
-			e.postObserve = postObserve
-			e.isUpToDate = isUpToDate
-			e.preUpdate = c.preUpdate
-			e.postUpdate = postUpdate
-			e.filterList = filterList
-		},
-	}
+	opts := []option{setupExternal}
+
 	return ctrl.NewControllerManagedBy(mgr).
 		Named(name).
 		WithOptions(controller.Options{
@@ -59,6 +48,18 @@ func SetupVPCEndpoint(mgr ctrl.Manager, l logging.Logger, rl workqueue.RateLimit
 			managed.WithPollInterval(poll),
 			managed.WithLogger(l.WithValues("controller", name)),
 			managed.WithRecorder(event.NewAPIRecorder(mgr.GetEventRecorderFor(name)))))
+}
+
+func setupExternal(e *external) {
+	c := &custom{client: e.client, kube: e.kube}
+	e.delete = c.delete
+	e.preCreate = preCreate
+	e.postCreate = postCreate
+	e.postObserve = postObserve
+	e.isUpToDate = isUpToDate
+	e.preUpdate = c.preUpdate
+	e.postUpdate = postUpdate
+	e.filterList = filterList
 }
 
 type custom struct {
@@ -297,11 +298,6 @@ func generateVPCEndpointSDK(vpcEndpoint *ec2.VpcEndpoint) *svcapitypes.VPCEndpoi
 
 	return vpcEndpointSDK
 }
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 6e1bfde0 (Reduce cyclomatic complexity for preUpdate)
 
 /*
 formatModifyVpcEndpointInput takes in a ModifyVpcEndpointInput, and sets
@@ -358,7 +354,6 @@ compare:
 
 	return result
 }
-<<<<<<< HEAD
 
 /*
 listCompareStringPtrIsSame takes in 2 list of string pointers,
@@ -387,6 +382,3 @@ compare:
 
 	return true
 }
->>>>>>> 58d44389 (Reduce cyclomatic complexity for isUpToDate)
-=======
->>>>>>> 6e1bfde0 (Reduce cyclomatic complexity for preUpdate)
