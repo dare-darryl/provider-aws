@@ -36,6 +36,7 @@ type CustomVPCPeeringConnectionParameters struct {
 // CustomVPCEndpointParameters are custom parameters for VPCEndpoint
 type CustomVPCEndpointParameters struct {
 	// The ID of the VPC. You must specify this parameter in the request.
+	// +optional
 	VPCID *string `json:"vpcID,omitempty"`
 	// VPCIDRef is a reference to an API used to set
 	// the VPCID.
