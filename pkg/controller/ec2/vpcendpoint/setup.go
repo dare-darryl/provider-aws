@@ -74,13 +74,13 @@ func preCreate(_ context.Context, cr *svcapitypes.VPCEndpoint, obj *svcsdk.Creat
 	value := meta.GetExternalName(cr)
 
 	// Clear SGs, RTs, and Subnets if they're empty
-	if cr.Spec.ForProvider.SecurityGroupIDs == nil || len(cr.Spec.ForProvider.SecurityGroupIDs) == 0 {
+	if len(cr.Spec.ForProvider.SecurityGroupIDs) == 0 {
 		obj.SecurityGroupIds = nil
 	}
-	if cr.Spec.ForProvider.RouteTableIDs == nil || len(cr.Spec.ForProvider.RouteTableIDs) == 0 {
+	if len(cr.Spec.ForProvider.RouteTableIDs) == 0 {
 		obj.RouteTableIds = nil
 	}
-	if cr.Spec.ForProvider.SubnetIDs == nil || len(cr.Spec.ForProvider.SubnetIDs) == 0 {
+	if len(cr.Spec.ForProvider.SubnetIDs) == 0 {
 		obj.SubnetIds = nil
 	}
 
