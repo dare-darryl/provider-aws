@@ -17,7 +17,6 @@ import (
 	"github.com/crossplane/crossplane-runtime/pkg/ratelimiter"
 	"github.com/crossplane/crossplane-runtime/pkg/reconciler/managed"
 	"github.com/crossplane/crossplane-runtime/pkg/resource"
-	"github.com/nsf/jsondiff"
 	"github.com/pkg/errors"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -182,19 +181,16 @@ sgCompare:
 	/*
 		4. Check policyDocument
 	*/
-	defaultPolicy := "{\"Statement\":[{\"Action\":\"*\",\"Effect\": \"Allow\",\"Principal\":\"*\",\"Resource\":\"*\"}]}"
-	declaredPolicy := awsclients.StringValue(cr.Spec.ForProvider.PolicyDocument)
-	upstreamPolicy := awsclients.StringValue(obj.VpcEndpoints[0].PolicyDocument)
+	defaultPolicyEndpoint := aws.String("{\"Statement\":[{\"Action\":\"*\",\"Effect\": \"Allow\",\"Principal\":\"*\",\"Resource\":\"*\"}]}")
+	defaultPolicyGateway := aws.String("{\"Version\":\"2008-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":\"*\",\"Action\":\"*\",\"Resource\":\"*\"}]}")
+	declaredPolicy := cr.Spec.ForProvider.PolicyDocument
+	upstreamPolicy := obj.VpcEndpoints[0].PolicyDocument
 
 	// If no declared policy, we expect the result to be equivalent to the default policy
-	if declaredPolicy == "" {
-		difference, _ := jsondiff.Compare([]byte(upstreamPolicy), []byte(defaultPolicy), &jsondiff.Options{})
-		return difference == jsondiff.FullMatch || difference == jsondiff.SupersetMatch, nil
+	if aws.StringValue(declaredPolicy) == "" {
+		return awsclients.IsPolicyUpToDate(upstreamPolicy, defaultPolicyEndpoint) || awsclients.IsPolicyUpToDate(upstreamPolicy, defaultPolicyGateway), nil
 	}
-
-	// If there is a declared policy, we expect the upstream policy to match
-	difference, _ := jsondiff.Compare([]byte(upstreamPolicy), []byte(declaredPolicy), &jsondiff.Options{})
-	return difference == jsondiff.FullMatch, nil
+	return awsclients.IsPolicyUpToDate(upstreamPolicy, declaredPolicy), nil
 }
 
 /*
