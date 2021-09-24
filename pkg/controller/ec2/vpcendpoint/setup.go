@@ -2,6 +2,7 @@ package vpcendpoint
 
 import (
 	"context"
+	"sort"
 	"strings"
 	"time"
 
@@ -46,6 +47,7 @@ func SetupVPCEndpoint(mgr ctrl.Manager, l logging.Logger, rl workqueue.RateLimit
 			managed.WithExternalConnecter(&connector{kube: mgr.GetClient(), opts: opts}),
 			managed.WithPollInterval(poll),
 			managed.WithLogger(l.WithValues("controller", name)),
+			managed.WithInitializers(managed.NewDefaultProviderConfig(mgr.GetClient()), &tagger{kube: mgr.GetClient()}),
 			managed.WithRecorder(event.NewAPIRecorder(mgr.GetEventRecorderFor(name)))))
 }
 
@@ -67,11 +69,6 @@ type custom struct {
 }
 
 func preCreate(_ context.Context, cr *svcapitypes.VPCEndpoint, obj *svcsdk.CreateVpcEndpointInput) error {
-	// set external name as tag on the vpc endpoint
-	resType := "vpc-endpoint"
-	key := "Name"
-	value := meta.GetExternalName(cr)
-
 	// Clear SGs, RTs, and Subnets if they're empty
 	if len(cr.Spec.ForProvider.SecurityGroupIDs) == 0 {
 		obj.SecurityGroupIds = nil
@@ -83,18 +80,6 @@ func preCreate(_ context.Context, cr *svcapitypes.VPCEndpoint, obj *svcsdk.Creat
 		obj.SubnetIds = nil
 	}
 
-	// Set tags
-	spec := svcsdk.TagSpecification{
-		ResourceType: &resType,
-		Tags: []*svcsdk.Tag{
-			{
-				Key:   &key,
-				Value: &value,
-			},
-		},
-	}
-
-	obj.TagSpecifications = append(obj.TagSpecifications, &spec)
 	return nil
 }
 
@@ -377,4 +362,46 @@ compare:
 	}
 
 	return true
+}
+
+const (
+	errKubeUpdateFailed = "cannot update Address custom resource"
+)
+
+type tagger struct {
+	kube client.Client
+}
+
+func (t *tagger) Initialize(ctx context.Context, mgd resource.Managed) error {
+	cr, ok := mgd.(*svcapitypes.VPCEndpoint)
+	if !ok {
+		return errors.New(errUnexpectedObject)
+	}
+	var vpcEndpointTags svcapitypes.TagSpecification
+	for _, tagSpecification := range cr.Spec.ForProvider.TagSpecifications {
+		if aws.StringValue(tagSpecification.ResourceType) == "vpc-endpoint" {
+			vpcEndpointTags = *tagSpecification
+		}
+	}
+
+	tagMap := map[string]string{}
+	tagMap["Name"] = cr.Name
+	for _, t := range vpcEndpointTags.Tags {
+		tagMap[aws.StringValue(t.Key)] = aws.StringValue(t.Value)
+	}
+	for k, v := range resource.GetExternalTags(mgd) {
+		tagMap[k] = v
+	}
+	vpcEndpointTags.Tags = make([]*svcapitypes.Tag, len(tagMap))
+	i := 0
+	for k, v := range tagMap {
+		vpcEndpointTags.Tags[i] = &svcapitypes.Tag{Key: aws.String(k), Value: aws.String(v)}
+		i++
+	}
+	sort.Slice(vpcEndpointTags.Tags, func(i, j int) bool {
+		return aws.StringValue(vpcEndpointTags.Tags[i].Key) < aws.StringValue(vpcEndpointTags.Tags[j].Key)
+	})
+
+	cr.Spec.ForProvider.TagSpecifications = []*svcapitypes.TagSpecification{&vpcEndpointTags}
+	return errors.Wrap(t.kube.Update(ctx, cr), errKubeUpdateFailed)
 }
