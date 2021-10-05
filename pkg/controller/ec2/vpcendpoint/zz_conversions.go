@@ -88,11 +88,6 @@ func GenerateVPCEndpoint(resp *svcsdk.DescribeVpcEndpointsOutput) *svcapitypes.V
 		} else {
 			cr.Spec.ForProvider.VPCEndpointType = nil
 		}
-		if elem.VpcId != nil {
-			cr.Spec.ForProvider.VPCID = elem.VpcId
-		} else {
-			cr.Spec.ForProvider.VPCID = nil
-		}
 		found = true
 		break
 	}
@@ -176,9 +171,6 @@ func GenerateCreateVpcEndpointInput(cr *svcapitypes.VPCEndpoint) *svcsdk.CreateV
 	}
 	if cr.Spec.ForProvider.VPCEndpointType != nil {
 		res.SetVpcEndpointType(*cr.Spec.ForProvider.VPCEndpointType)
-	}
-	if cr.Spec.ForProvider.VPCID != nil {
-		res.SetVpcId(*cr.Spec.ForProvider.VPCID)
 	}
 
 	return res

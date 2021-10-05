@@ -11778,11 +11778,6 @@ func (in *Subnet) DeepCopyInto(out *Subnet) {
 		*out = new(string)
 		**out = **in
 	}
-	if in.AvailableIPAddressCount != nil {
-		in, out := &in.AvailableIPAddressCount, &out.AvailableIPAddressCount
-		*out = new(int64)
-		**out = **in
-	}
 	if in.CIDRBlock != nil {
 		in, out := &in.CIDRBlock, &out.CIDRBlock
 		*out = new(string)
