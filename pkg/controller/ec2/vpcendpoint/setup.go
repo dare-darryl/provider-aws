@@ -39,7 +39,7 @@ func SetupVPCEndpoint(mgr ctrl.Manager, l logging.Logger, rl workqueue.RateLimit
 	return ctrl.NewControllerManagedBy(mgr).
 		Named(name).
 		WithOptions(controller.Options{
-			RateLimiter: ratelimiter.NewDefaultManagedRateLimiter(rl),
+			RateLimiter: ratelimiter.NewController(rl),
 		}).
 		For(&svcapitypes.VPCEndpoint{}).
 		Complete(managed.NewReconciler(mgr,
@@ -90,7 +90,6 @@ func postCreate(ctx context.Context, cr *svcapitypes.VPCEndpoint, obj *svcsdk.Cr
 
 	// set vpc endpoint id as external name annotation on k8s object after creation
 	meta.SetExternalName(cr, aws.StringValue(obj.VpcEndpoint.VpcEndpointId))
-	cre.ExternalNameAssigned = true
 	return cre, nil
 }
 
