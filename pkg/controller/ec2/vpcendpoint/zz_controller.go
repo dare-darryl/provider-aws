@@ -119,6 +119,11 @@ func (e *external) Create(ctx context.Context, mg cpresource.Managed) (managed.E
 		return managed.ExternalCreation{}, awsclient.Wrap(err, errCreate)
 	}
 
+	if resp.ClientToken != nil {
+		cr.Spec.ForProvider.ClientToken = resp.ClientToken
+	} else {
+		cr.Spec.ForProvider.ClientToken = nil
+	}
 	if resp.VpcEndpoint != nil {
 		f1 := &svcapitypes.VPCEndpoint_SDK{}
 		if resp.VpcEndpoint.CreationTimestamp != nil {

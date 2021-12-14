@@ -54,7 +54,9 @@ type VPCEndpointParameters struct {
 	// true: enableDnsHostnames and enableDnsSupport. Use ModifyVpcAttribute to
 	// set the VPC attributes.
 	//
-	// Default: true
+	// Private DNS is not supported for Amazon S3 interface endpoints.
+	//
+	// Default: true for supported endpoints
 	PrivateDNSEnabled *bool `json:"privateDNSEnabled,omitempty"`
 	// (Gateway endpoint) One or more route table IDs.
 	RouteTableIDs []*string `json:"routeTableIDs,omitempty"`

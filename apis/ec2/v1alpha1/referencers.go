@@ -82,7 +82,7 @@ func (mg *VPCEndpoint) ResolveReferences(ctx context.Context, c client.Reader) e
 
 	// Resolve spec.forProvider.subnetIds
 	mrsp, err := r.ResolveMultiple(ctx, reference.MultiResolutionRequest{
-		CurrentValues: aws.StringValueSlice(mg.Spec.ForProvider.SubnetIDs),
+		CurrentValues: aws.ToStringSlice(mg.Spec.ForProvider.SubnetIDs),
 		References:    mg.Spec.ForProvider.SubnetIDRefs,
 		Selector:      mg.Spec.ForProvider.SubnetIDSelector,
 		To:            reference.To{Managed: &v1beta1.Subnet{}, List: &v1beta1.SubnetList{}},
@@ -96,7 +96,7 @@ func (mg *VPCEndpoint) ResolveReferences(ctx context.Context, c client.Reader) e
 
 	// Resolve spec.forProvider.securityGroupIds
 	mrsp, err = r.ResolveMultiple(ctx, reference.MultiResolutionRequest{
-		CurrentValues: aws.StringValueSlice(mg.Spec.ForProvider.SecurityGroupIDs),
+		CurrentValues: aws.ToStringSlice(mg.Spec.ForProvider.SecurityGroupIDs),
 		References:    mg.Spec.ForProvider.SecurityGroupIDRefs,
 		Selector:      mg.Spec.ForProvider.SecurityGroupIDSelector,
 		To:            reference.To{Managed: &v1beta1.SecurityGroup{}, List: &v1beta1.SecurityGroupList{}},
@@ -110,7 +110,7 @@ func (mg *VPCEndpoint) ResolveReferences(ctx context.Context, c client.Reader) e
 
 	// Resolve spec.forProvider.routeTableIDs
 	mrsp, err = r.ResolveMultiple(ctx, reference.MultiResolutionRequest{
-		CurrentValues: aws.StringValueSlice(mg.Spec.ForProvider.RouteTableIDs),
+		CurrentValues: aws.ToStringSlice(mg.Spec.ForProvider.RouteTableIDs),
 		References:    mg.Spec.ForProvider.RouteTableIDRefs,
 		Selector:      mg.Spec.ForProvider.RouteTableIDSelector,
 		To:            reference.To{Managed: &v1beta1.RouteTable{}, List: &v1beta1.RouteTableList{}},
