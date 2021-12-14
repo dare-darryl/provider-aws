@@ -69,6 +69,9 @@ type custom struct {
 }
 
 func preCreate(_ context.Context, cr *svcapitypes.VPCEndpoint, obj *svcsdk.CreateVpcEndpointInput) error {
+	// Set VPC ID
+	obj.VpcId = cr.Spec.ForProvider.VPCID
+
 	// Clear SGs, RTs, and Subnets if they're empty
 	if len(cr.Spec.ForProvider.SecurityGroupIDs) == 0 {
 		obj.SecurityGroupIds = nil
@@ -392,6 +395,7 @@ func (t *tagger) Initialize(ctx context.Context, mgd resource.Managed) error {
 		tagMap[k] = v
 	}
 	vpcEndpointTags.Tags = make([]*svcapitypes.Tag, len(tagMap))
+	vpcEndpointTags.ResourceType = aws.String("vpc-endpoint")
 	i := 0
 	for k, v := range tagMap {
 		vpcEndpointTags.Tags[i] = &svcapitypes.Tag{Key: aws.String(k), Value: aws.String(v)}
