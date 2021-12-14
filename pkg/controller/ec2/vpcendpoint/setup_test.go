@@ -113,9 +113,6 @@ func TestCreate(t *testing.T) {
 						},
 					}),
 				),
-				result: managed.ExternalCreation{
-					ExternalNameAssigned: true,
-				},
 			},
 		},
 		"ErrCreate": {
